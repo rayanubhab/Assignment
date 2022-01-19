@@ -1,0 +1,27 @@
+import speech_recognition as sr
+import yagmail
+
+##creating an instance
+recognizer=sr.Recognizer()
+with sr.Microphone() as source:
+    print('Clearing background noise..')
+    recognizer.adjust_for_ambient_noise(source,duration=1)
+    print("waiting for your message...")
+    recordedaudio=recognizer.listen(source)
+    print('Done recording..!')
+try:
+    print('Printing the message..')
+    ##uses google's speech recognition api to convert the recorded audio into text
+    text=recognizer.recognize_google(recordedaudio,language='en-US')
+
+    print('Your message:{}'.format(text))
+
+except Exception as ex:
+    print(ex)
+
+#Automate mails:
+
+reciever='rayanubhab.ecell@gmail.com' 
+message=text
+sender=yagmail.SMTP('rayanubhab.ecell@gmail.com')
+sender.send(to=reciever,subject='This is an automated mail',contents=message)
